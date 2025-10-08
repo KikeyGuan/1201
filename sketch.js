@@ -1,3 +1,11 @@
+//Kikey Guan
+//I wanted to make an explosion on contact. there were problems but there is also a nice bug
+//main problem is that the explosion would 
+//only happen frame by frame on contact if not in draw, 
+//so i added a true false, but then the ripple will be shared so only one can exist
+//also tried [utting the explode code in the if statment but that will be just one frame
+//I dont know why it's making random explosion, maybe somthing with the shared value,
+//but it looks neat.
 let col, col1, col2, col3, storedCol;
 let x = 100, y = 100;
 
