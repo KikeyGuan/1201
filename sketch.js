@@ -9,7 +9,7 @@
 let col, col1, col2, col3, storedCol;
 let x = 100, y = 100;
 
-let diameter = 100;
+let mainDiameter = 100, diameter;
 
 let xV = 8, yV = 6; //speed in the x and y directions
 
@@ -18,31 +18,28 @@ let noStop1 = false,noStop2 = false,noStop3 = false,noStop4 = false;
 
 
 function setup(){
- createCanvas(windowWidth,windowHeight); 
- col1 = color("#851400");
- col2 = color("#00e2f2");
- col3 = color('purple');
-noStroke() //frameRate(4)
+  createCanvas(windowWidth,windowHeight); 
+  col1 = color("#851400");
+  col2 = color("#00e2f2");
+  col3 = color('purple');
+  strokeWeight(2) //frameRate(4)
 }
 
 function draw(){
+  diameter = mainDiameter + random(-50,50);
 //background(255,50)
-let i = map(x, 0,width, 0,1)
-let j = map(y, 0, height, 0,1);
+  let i = map(x, 0,width, 0,1)
+  let j = map(y, 0, height, 0,1);
 
-col =  lerpColor(col1, col2, i) 
-col = lerpColor(col, col3,j)
-fill(col)
-storedCol = col;
-
-
-push()
+  col =  lerpColor(col1, col2, i) 
+  col = lerpColor(col, col3,j)
+  fill(col)
+  storedCol = col;
+  push()
   translate(x,y)
   ellipse(0,0,diameter)
-
- pop()
-
- move();
+  pop()
+  move();
 
 //right side wall hit check
 if(x> width- diameter/2){
