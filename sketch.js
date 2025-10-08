@@ -1,160 +1,55 @@
-//Kikey Guan
-//I wanted to make an explosion on contact. there were problems but there is also a nice bug
-//main problem is that the explosion would 
-//only happen frame by frame on contact if not in draw, 
-//so i added a true false, but then the ripple will be shared so only one can exist
-//also tried [utting the explode code in the if statment but that will be just one frame
-//I dont know why it's making random explosion, maybe somthing with the shared value,
-//but it looks neat.
-let col, col1, col2, col3, storedCol;
-let x = 100, y = 100;
+// Click and drag the mouse to view the scene from different angles.
+let col;
 
-let mainDiameter = 100, diameter;
-
-let xV = 8, yV = 6; //speed in the x and y directions
-
-let grow=0, stopGrow=220, colGrow=220, hitx, hity; 
-let noStop1 = false,noStop2 = false,noStop3 = false,noStop4 = false;
-
-
-function setup(){
-  createCanvas(windowWidth,windowHeight); 
-  col1 = color("#851400");
-  col2 = color("#00e2f2");
-  col3 = color('purple');
-  strokeWeight(2) //frameRate(4)
+function setup() {
+    createCanvas(windowWidth,windowHeight, WEBGL);
+    col1 = color("#ececd9ff");
+    col2 = color("#F3F3F1");
 }
 
-function draw(){
-  diameter = mainDiameter + random(-50,50);
-//background(255,50)
-  let i = map(x, 0,width, 0,1)
-  let j = map(y, 0, height, 0,1);
+function draw() {
+    background(color("#66B2FF"));
+    col = lerpColor(col1, col2,1);
+    // Enable orbiting with the mouse.
+    orbitControl();
+  
+    noStroke();
+    scale(2,2,2);
+    
+    let angle = frameCount * 0.01;
+    rotateY(angle);
 
-  col =  lerpColor(col1, col2, i) 
-  col = lerpColor(col, col3,j)
-  fill(col)
-  storedCol = col;
-  push()
-  translate(x,y)
-  ellipse(0,0,diameter)
-  pop()
-  move();
-
-//right side wall hit check
-if(x> width- diameter/2){
-  hitx = x;
-  hity = y;
-  noStop1 = true;
-}
-//left side wall hit check
-if(x < diameter/2){
-  hitx = x;
-  hity = y;
-  noStop2 = true;
-}
-//top
-if(y > height - diameter/2){
-  hitx = x;
-  hity = y;
-  noStop3 = true;
-}
-//bottom
-if(y<diameter/2){
-  hitx = x;
-  hity = y;
-  noStop4 = true;
-}
-
-//ripple. each side needs their own, or they will all share one ripple
-if(noStop1 == true){
-  translate(hitx,hity);
-  storedCol.setAlpha(colGrow);
-  fill(storedCol);
-  ellipse(0,0,diameter+grow);
-  if(grow!=stopGrow){
-    colGrow--;
-    grow++;
-  }
-  else{
-    grow = 0;
-    colGrow = 220;
-    noStop1 = false;
-  }
-}
-
-if(noStop2 == true){
-  translate(hitx,hity);
-  storedCol.setAlpha(colGrow);
-  fill(storedCol);
-  ellipse(0,0,diameter+grow);
-  if(grow!=stopGrow){
-    colGrow--;
-    grow++;
-  }
-  else{
-    grow = 0;
-    colGrow = 220;
-    noStop2 = false;
-  }
-}
-
-if(noStop3 == true){
-  translate(hitx,hity);
-  storedCol.setAlpha(colGrow);
-  fill(storedCol);
-  ellipse(0,0,diameter+grow);
-  if(grow!=stopGrow){
-    colGrow--;
-    grow++;
-  }
-  else{
-    grow = 0;
-    colGrow = 220;
-    noStop3 = false;
-  }
-}
-
-if(noStop4 == true){
-  translate(hitx,hity);
-  storedCol.setAlpha(colGrow);
-  fill(storedCol);
-  ellipse(0,0,diameter+grow);
-  if(grow!=stopGrow){
-    colGrow--;
-    grow++;
-  }
-  else{
-    grow = 0;
-    colGrow = 220;
-    noStop4 = false;
-  }
+    FESH();
 }
 
 
-}
+function FESH(){
+    //body
+    fill(col2);
+    ellipsoid(60, 20, 25); //x,y,z
 
-function mousePressed(){
+    //eyes
+    fill(0);
+    translate(-55, 0, 10);
+    sphere(3,5,5);
+    translate(-1, 0, -19);
+    sphere(3,5,5);
+    //mouth
+    scale(0.5,1,1);
+    translate(-8, 0, 9);
+    cone(3);
+    
 
-  col1 = color(random(255),random(255),random(255))
-  col2 = color(random(255),random(255),random(255))
-  col3 = color(random(255),random(255),random(255))
+    //tail
+    scale(2,1,0.2);
+    translate(115, 0, 0);
+    let axis = [0, 0, 1];
+    rotate(52,axis);
+    fill(col1);
+    cone(30);
 
+    //a fix, push and pop. push saves postion/ location. 
+    //after the changes pop goes back to orignal positon/location
+    
 
-}
-function move(){
-  if(x > width - diameter/2){
-    xV = -xV;
-  }
-  if (x < diameter/2){
-    xV = -xV;
-  }
-  if(y > height - diameter/2){
-    yV = -yV;
-  }
-  if(y<diameter/2){
-    yV =- yV;
-  }
-  x+= xV 
-  y+= yV 
 }
