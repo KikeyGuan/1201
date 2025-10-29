@@ -1,16 +1,34 @@
 //switch to 2D
 
-let x=0, y=10, speed=0.5;
-let mouseRotate=0, collisionPoint=35 ,collisionPoint2=250;
-let s, b;
+let x=0, y=10, speed=0, fallSpeed=1;
+let mouseRotate=0, xRotate=0, yRotate=0, collisionPoint=35 ,collisionPoint2=250;
+let s, b, font;
+let turnSpeed =false;
+let circColor = 100, bgFill = 220, score=0;
+
+function preload() {
+  font = loadFont('PoetsenOne-Regular.ttf');
+}
+
 function setup() {
   createCanvas(windowWidth, windowHeight,WEBGL);
   
 }
 
+
 function draw() {
-  background(220);
-  orbitControl(0,0,0);
+  background(bgFill);
+  orbitControl(0,0,1);
+
+  push();
+  noStroke();
+  fill(circColor);
+  circle(-150,-90,100);
+  fill('red');
+  textFont(font);
+  textSize(36);
+  text(str(score),-90,-80);
+  pop();
 
   //rotate
   //let axis = [1, 1, 0];
@@ -20,55 +38,59 @@ function draw() {
   //draw sphere
   push();
   translate(x,y,0);
+  fill('red');
+  noStroke();
   s = sphere(10);
   pop();
 
   //draw box
   push();
-  translate(0,100);
+  translate(0,100,0);
   b = box(500,50,50);
   pop();
 
-  /////////////////////////////////falling (Y movement)///////////////////////////
-  /*
-  if(dist(x,y,0, 0,100,0)>collisionPoint && y!=65){//collsionpoint
-    y=y+speed;
-    if(y!=65){
-      y=y+speed;
-    }
-    if(x>collisionPoint2 && y==65){
-      y=y+speed;
-    }
+
+  circColor = x+100;
+  if(circColor<bgFill+5 && circColor>bgFill-5){
+    score++;
+    bgFill = random(0,225);
+
   }
-  */
+  
+
+
+
+  /////////////////////////////////falling (Y movement)///////////////////////////
 
   if(y!=65){
-    y=y+speed;//keep ball falling at start
+    y=y+fallSpeed;//keep ball falling at start
+  }
+  else{
+    turnSpeed = true; //turn on speed, conflicts with line above if both is runing at the same time
   }
   if(dist(x,y,0, 0,100,0)>collisionPoint){
-      y=y+speed; //keep ball falling when it get to the egde of box
-    }
+      y=y+fallSpeed; //keep ball falling when it get to the egde of box
 
-  /*
-  if(dist(x,y,0, 0,100,0)<collisionPoint){//35<75
-    x=x+speed;
-    if (dist(x,y,0, 0,100,0)>collisionPoint){//27>23
-    x=x-speed;
-  }
-  }
-  */
+    }
 
   ///////////////Sliding (X Movement)////////////////////
   if(mouseRotate>0){ //1>1.6
     x=x+speed;
   }
   if(mouseRotate<0){
-    x=x-speed;
+    x=x+speed;
   }
-  
 
 
-  //print(y)
+  /////////////////////////////// respwan ball ////////////////////////////////
+  if(y>400){
+    score = 0;
+    speed = 0
+    x = 0 
+    y= 10
+  }
+
+  //print(speed)//x+"   "+y
   //print(b.width)//somehow width is 870 not 500
   //print("dist= "+dist(x,y,0, 0,100,0)+"     collisionP= "+ collisionPoint);
   //print(mouseRotate);
@@ -79,12 +101,23 @@ function mouseDragged() {
   //rotate with limits 
   if(mouseX>windowWidth/2 && mouseRotate<= 1.6){
     mouseRotate+=0.05;
+    circColor+=5;
     collisionPoint= collisionPoint2;
+    if(turnSpeed){
+      speed+=0.2;
+    }
+    
   }
   if(mouseX<windowWidth/2 && mouseRotate>= -1.6){
     mouseRotate-=0.05;
+    circColor-=5;
     collisionPoint= collisionPoint2;
+    if(turnSpeed){
+      speed-=0.2;
+    }
+    
   }
 }
+
 
 //if rotate change y speed
