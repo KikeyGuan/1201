@@ -1,4 +1,6 @@
-//switch to 2D
+//study with 3d collisions. rotate the platfrom and let the ball roll.
+//try to match the color of the cricle as the ball is rolling
+//get high score
 
 let x=0, y=10, speed=0, fallSpeed=1;
 let mouseRotate=0, xRotate=0, yRotate=0, collisionPoint=35 ,collisionPoint2=250;
@@ -19,45 +21,17 @@ function setup() {
 function draw() {
   background(bgFill);
   orbitControl(0,0,1);
-
-  push();
-  noStroke();
-  fill(circColor);
-  circle(-150,-90,100);
-  fill('red');
-  textFont(font);
-  textSize(36);
-  text(str(score),-90,-80);
-  pop();
-
-  //rotate
-  //let axis = [1, 1, 0];
+  score();
   rotate(mouseRotate);
-  
+  drawShape();
 
-  //draw sphere
-  push();
-  translate(x,y,0);
-  fill('red');
-  noStroke();
-  s = sphere(10);
-  pop();
-
-  //draw box
-  push();
-  translate(0,100,0);
-  b = box(500,50,50);
-  pop();
-
-
+  /////////////////////// score /////////////////////
   circColor = x+100;
   if(circColor<bgFill+5 && circColor>bgFill-5){
     score++;
     bgFill = random(0,225);
 
   }
-  
-
 
 
   /////////////////////////////////falling (Y movement)///////////////////////////
@@ -117,6 +91,34 @@ function mouseDragged() {
     }
     
   }
+}
+
+function score(){
+  push();
+  noStroke();
+  fill(circColor);
+  circle(-150,-90,100);
+  fill('red');
+  textFont(font);
+  textSize(36);
+  text(str(score),-90,-80);
+  pop();
+}
+
+function drawShape(){
+  //draw sphere
+  push();
+  translate(x,y,0);
+  fill('red');
+  noStroke();
+  s = sphere(10);
+  pop();
+
+  //draw box
+  push();
+  translate(0,100,0);
+  b = box(500,50,50);
+  pop();
 }
 
 
