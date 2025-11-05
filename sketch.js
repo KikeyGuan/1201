@@ -6,7 +6,8 @@ let x=0, y=10, speed=0, fallSpeed=1;
 let mouseRotate=0, xRotate=0, yRotate=0, collisionPoint=35 ,collisionPoint2=250;
 let s, b, font;
 let turnSpeed =false;
-let circColor = 100, bgFill = 220, score=0;
+let circColor = 100, bgFill = 220, score=0, timer=0;
+let mousePosX;
 
 function preload() {
   font = loadFont('PoetsenOne-Regular.ttf');
@@ -21,15 +22,23 @@ function setup() {
 function draw() {
   background(bgFill);
   orbitControl(0,0,1);
-  score();
+  scorePart();
   rotate(mouseRotate);
   drawShape();
 
   /////////////////////// score /////////////////////
   circColor = x+100;
+
   if(circColor<bgFill+5 && circColor>bgFill-5){
-    score++;
-    bgFill = random(0,225);
+    if(true){
+      timer++;
+    }
+    if(timer ==100){
+      score++;
+      bgFill = random(0,225);
+      timer = 0;
+    }
+    
 
   }
 
@@ -59,9 +68,10 @@ function draw() {
   /////////////////////////////// respwan ball ////////////////////////////////
   if(y>400){
     score = 0;
-    speed = 0
-    x = 0 
-    y= 10
+    speed = 0;
+    x = 0 ;
+    y= 10;
+    mouseRotate = 0;
   }
 
   //print(speed)//x+"   "+y
@@ -71,9 +81,16 @@ function draw() {
 
 }
 
+function mousePressed() {
+  mousePosX = mouseX;
+  print (mouseX);
+}
+
 function mouseDragged() {
+  
+  
   //rotate with limits 
-  if(mouseX>windowWidth/2 && mouseRotate<= 1.6){
+  if(mouseX>mousePosX && mouseRotate<= 1.6){ //mouseX>windowWidth/2 && mouseRotate<= 1.6
     mouseRotate+=0.05;
     circColor+=5;
     collisionPoint= collisionPoint2;
@@ -82,7 +99,7 @@ function mouseDragged() {
     }
     
   }
-  if(mouseX<windowWidth/2 && mouseRotate>= -1.6){
+  if(mouseX<mousePosX && mouseRotate>= -1.6){  //mouseX<windowWidth/2 && mouseRotate>= -1.6
     mouseRotate-=0.05;
     circColor-=5;
     collisionPoint= collisionPoint2;
@@ -93,7 +110,7 @@ function mouseDragged() {
   }
 }
 
-function score(){
+function scorePart(){
   push();
   noStroke();
   fill(circColor);
@@ -117,6 +134,7 @@ function drawShape(){
   //draw box
   push();
   translate(0,100,0);
+  strokeWeight(3);
   b = box(500,50,50);
   pop();
 }
