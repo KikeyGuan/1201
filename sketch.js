@@ -1,17 +1,20 @@
 let fish1, fish2, fish3, fish4, fish5;
 let fishingLine=0, lineLimit, hookXPos, hookYPos, fishOnLine = false;
 let timer=0;
-let bgFill = 150;
+let bgFill = 150, fishGen, fishNum;
 
 let fishList = []
 let fishPool = []
 
+
 function preload(){
+  
   fishPool[0] = loadImage("fish1.png");
   fishPool[1] = loadImage("fish2.png");
   fishPool[2] = loadImage("fish3.png");
   fishPool[3] = loadImage("fish4.png");
   fishPool[4] = loadImage("fish5.png");
+
 }
 
 function setup(){
@@ -24,15 +27,15 @@ function setup(){
 }
 
 function draw(){
+  drawScene();
   hookYPos = windowWidth/4+fishingLine;
+  fishGen = int(random(0,5));
   //print(mouseX+"    "+mouseY);
   //print(fishingLine);
   //print(fishList);
-  print(fishPool);
-  //image(fishPool[0],100,100);
-
-  drawScene();
-
+  //print(fishPool);
+  //print(fishGen)
+  image(fishPool[fishGen],100,100);
 
   ///////////////////FISHING//////////////////////
   if (fishingLine == 470){
@@ -42,26 +45,25 @@ function draw(){
     print("CTACH");
     fishOnLine =true;
   }
-  if(fishOnLine==true&&fishingLine==300){
-    print("RELEASE");
-    fishList.push ("fish1");
-    //add fish to array
-    timer = 0;
-    fishOnLine = false;
-  }
   if(fishOnLine==true){
     push();
     //imageMode(CENTER);
     translate(hookXPos, hookYPos+27);
     rotate(90);
     //image(fish1,0,0);
-    image(fish1,0,0);
+    image(fishPool[fishNum],0,0);//needs help
     pop();
   }
-
- 
- 
+  if(fishOnLine==true&&fishingLine==300){
+    print("RELEASE");
+    fishList.push ("fish from fish pool");//put fish outside of hole
+    //add fish to array
+    timer = 0;
+    fishOnLine = false;
+  }
+  //for loop print fishlist
 }
+
 
 function fling(event){
   if (event.deltaY > 0 && lineLimit+fishingLine<680) {
