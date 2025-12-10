@@ -1,7 +1,7 @@
 let fish1, fish2, fish3, fish4, fish5;
 let fishingLine=0, lineLimit, hookXPos, hookYPos, fishOnLine = false;
 let timer=0;
-let bgFill = 150, fishGen, fishNum;
+let bgFill = 150, fishGen, i, f;
 
 let fishList = []
 let fishPool = []
@@ -22,51 +22,71 @@ function setup(){
   cnv.mouseWheel(fling);
   imageMode(CENTER);
   angleMode(DEGREES);
-  lineLimit = windowHeight/4;
+  lineLimit = windowHeight-150;
   hookXPos = windowWidth/2;
 }
 
 function draw(){
   drawScene();
   hookYPos = windowWidth/4+fishingLine;
-  fishGen = int(random(0,5));
+  //fishGen = int(random(0,5));
   //print(mouseX+"    "+mouseY);
   //print(fishingLine);
   //print(fishList);
   //print(fishPool);
   //print(fishGen)
-  image(fishPool[fishGen],100,100);
+  //image(fishPool[0],100,100);
 
   ///////////////////FISHING//////////////////////
-  if (fishingLine == 470){
+  if (fishingLine > windowHeight-250){ //470
+    fishGen = int(random(0,5));
     timer++;
+  }
+  else{
+    timer=0;
   }
   if (timer==100){
     print("CTACH");
     fishOnLine =true;
   }
+  
+  
   if(fishOnLine==true){
     push();
     //imageMode(CENTER);
     translate(hookXPos, hookYPos+27);
     rotate(90);
     //image(fish1,0,0);
-    image(fishPool[fishNum],0,0);//needs help
+    image(fishPool[fishGen],0,0);//needs help
     pop();
   }
   if(fishOnLine==true&&fishingLine==300){
     print("RELEASE");
-    fishList.push ("fish from fish pool");//put fish outside of hole
+    fishList.push (fishPool[fishGen]);//put fish outside of hole
     //add fish to array
     timer = 0;
     fishOnLine = false;
   }
-  //for loop print fishlist
+
+  for(i=0;i<fishList.length;i++){
+    image(fishList[i],windowWidth/2,windowHeight/2);
+  }
+
+
+
+  /////////////////////if no mouse///////////////////
+  //needs fixing
+  if(keyIsDown(UP_ARROW)){
+    fishingLine+=10;
+  }
+  if(keyIsDown(DOWN_ARROW)){
+    fishingLine-=10;
+  }
 }
 
 
 function fling(event){
-  if (event.deltaY > 0 && lineLimit+fishingLine<680) {
+  if (event.deltaY > 0 && lineLimit+fishingLine<1500) {
     //print("going down");
     fishingLine+=10;
 
@@ -92,7 +112,7 @@ function drawScene(){
   push();
   noStroke();
   fill(80);//bg fill
-  rect(windowWidth/2.5, windowHeight-150,200,200);
+  //rect(windowWidth/2.5, windowHeight-150,200,200);
 
   strokeWeight(1);
   stroke(255);
