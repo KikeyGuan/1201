@@ -57,7 +57,7 @@ function draw(){
     image(fishPool[fishGen],0,0);
     pop();
   }
-  if(fishOnLine==true&&fishingLine<windowHeight/2-150){
+  if(fishOnLine==true&&fishingLine<windowHeight/2-200){
     Xgen.push(randX);
     Ygen.push(randY);
     yVa.push(-1);
@@ -131,7 +131,7 @@ function DrawFront(){
   push();
   noStroke();
   fill(bgFill);
-  rect(windowWidth/2.5, windowHeight-150,200,200);
+  rect(windowWidth/2.5, windowHeight-150,1000,1000);
   strokeWeight(1);
   stroke(255);
   fill(0);
