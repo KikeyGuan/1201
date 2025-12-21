@@ -1,19 +1,21 @@
-//kiekyguan
+//kikeyguan
 //fishing
 //how to play: using mouse scroller or the up/down arrow keys. drop your fishing
-//line. wait for 1 second, then pull up.
+//line all the way down. wait for 3-5 second, then pull up.
 let fish1, fish2, fish3, fish4, fish5;
-let fishingLine=0, lineLimit, hookXPos, hookYPos, fishOnLine = false;
+let fishingLine=0, lineLimit, hookXPos, hookYPos, fishOnLine = false, lineColor;
 let timer=0;
-let bgFill = 150, fishGen, i, randX, randY, xV=1,yV=1;
-//i want to add image flip but then i realized i need another array for that.
+let bgFill = 150, fishGen, i, randX, randY, xV=1,yV=1, size;
 
+//started with arrays and continuing with arrays
 let fishList = []
 let fishPool = []
 let Xgen = []
 let Ygen = []
 let xVa = []
 let yVa = []
+let flip = []
+let fishSize = []
 
 function preload(){
   fishPool[0] = loadImage("fish1.png");
@@ -30,6 +32,7 @@ function setup(){
   angleMode(DEGREES);
   lineLimit = windowHeight-150;
   hookXPos = windowWidth/2;
+  lineColor = color(100,100,100);
 }
 
 function draw(){
@@ -41,6 +44,7 @@ function draw(){
     fishGen = int(random(0,5));
     randY = int(random(100,windowHeight/2));
     randX = int(random(100,windowWidth-100));
+    size = int(random(50,100));
     timer++;
   }
   else{
@@ -49,6 +53,7 @@ function draw(){
   if (timer==100){
     print("CTACH");
     fishOnLine =true;
+    lineColor= color(177, 91, 91);
   }
   if(fishOnLine==true){
     push();
@@ -60,11 +65,14 @@ function draw(){
   if(fishOnLine==true&&fishingLine<windowHeight/2-200){
     Xgen.push(randX);
     Ygen.push(randY);
-    yVa.push(-1);
-    xVa.push(-1);
+    yVa.push(yV);
+    xVa.push(xV);
+    fishSize.push(size);
     print("RELEASE");
     fishList.push (fishPool[fishGen]);
+    flip.push (true);
     timer = 0;
+    lineColor = color(100,100,100);
     fishOnLine = false;
   }
   DrawFront();
@@ -74,10 +82,12 @@ function draw(){
     if(Xgen[i] > width){
       //xV = -xV;
       xVa[i] = xVa[i]*-1;
+      flip[i] = false;
     }
     if(Xgen[i] < 0){
       //xV = -xV;
       xVa[i] =xVa[i]*-1;
+      flip[i] = true;
     }
     if(Ygen[i] > height){
       //yV = -yV;
@@ -91,7 +101,16 @@ function draw(){
     Ygen[i]+= yVa[i];
   }
   for(i=0;i<fishList.length;i++){
-    image(fishList[i],Xgen[i],Ygen[i]);
+    if(flip[i]==true){
+      push();
+      scale(-1,1);
+      image(fishList[i],Xgen[i]*-1,Ygen[i],fishSize[i]);
+      pop();
+    }
+    else{
+      image(fishList[i],Xgen[i],Ygen[i],fishSize[i]);
+    }
+    
   }
   
   /////////////////////if no mouse///////////////////
@@ -101,6 +120,15 @@ function draw(){
   if(keyIsDown(UP_ARROW)&& lineLimit< lineLimit+fishingLine){
     fishingLine-=10;
   }
+
+  ////////////////Text////////////// 
+  textSize(15);
+  text('How to play:', 15, 15);
+  textSize(12);
+  text('using mouse scroller or the up/down arrow keys', 15, 30);
+  text('drop your fishingline all the way down', 15, 45);
+  text('wait for 3-5 second, then pull up.', 15, 60);
+  text('Fish Cuaght: '+ fishList.length , 35, 95)
 }
 
 function fling(event){
@@ -122,7 +150,7 @@ function drawBack(){
   fill(0);
   arc(windowWidth/2, windowHeight-150, 120, 60, 180, PI-4);
   strokeWeight(5);
-  stroke(100);
+  stroke(lineColor);//100
   line(windowWidth/2, windowWidth/4, windowWidth/2, windowWidth/4+fishingLine);
   pop();
 }
